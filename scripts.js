@@ -25,14 +25,13 @@ document.body.onload=function init(){
     left:0;
     z-index=1;
     border:solid yellow 6px;
-    box-sizing:inherit;
-    transform: translate(350px,250px);`;
+    box-sizing:inherit;`;
     document.body.appendChild(smallCircle);
 
-    let button=document.createElement('button');
-    button.type="button";
-    button.innerHTML="click me";
-    button.style=`
+    let startButton=document.createElement('button');
+    startButton.type="button";
+    startButton.innerHTML="click me";
+    startButton.style=`
     font-size:30; 
     background: red; 
     color:white; 
@@ -42,49 +41,55 @@ document.body.onload=function init(){
     top:40px;
     box-sizing:inherit;
     outline:none;`;
-    button.addEventListener('click',onButtonClick);
-    document.body.appendChild(button);
+    startButton.addEventListener('click',onStartButtonClick);
+    document.body.appendChild(startButton);
+
+    let stopButton=document.createElement('button');
+    stopButton.type="button";
+    stopButton.innerHTML="STOP";
+    stopButton.style=`
+    font-size:30; 
+    background: red; 
+    color:white; 
+    border-radius:8px; 
+    position:absolute;
+    right:40px;
+    top:100px;
+    box-sizing:inherit;
+    outline:none;`;
+    stopButton.addEventListener('click',onStopButtonClick);
+    document.body.appendChild(stopButton);
 }
 
 const points=new Array(200);
-let buttonClicked=false;
-function onButtonClick(){
-    if(!buttonClicked){
-        buttonClicked=true;
+let startButtonClicked=false;
+let intervalId;
+
+function onStartButtonClick(){
+    if(!startButtonClicked){
+        startButtonClicked=true;
         startCircle();
     }
+}
+
+function onStopButtonClick(){
+    startButtonClicked=false;
+    clearInterval(intervalId);
 }
 
 function startCircle(){
     
     createPoints(points);
-    // points_holder=document.getElementById('points_holder');
-    // for(let i=0;i<points.length;i++)
-    // {
-    //     let point=document.createElement('div');
-    //     point.style=`
-    //     position:absolute;
-    //     width:5px;
-    //     height:5px;
-    //     box-sizing:inherit;
-    //     z-index:2;
-    //     top:0;
-    //     left:0;
-    //     border:solid red 2px;
-    //     border-radius:100%;
-    //     transform:translate(${points[i].x+3}px,${points[i].y-5}px);
-    //     `
-    //     points_holder.appendChild(point);
-    // }
     const circle=document.getElementById('smallCircle');
     let i=0;
-    while(true){
-        circle.style.left=`${points[i].x}px`
-        circle.style.top=`${points[i].y}px`
+    intervalId=setInterval(frame,5);
+    function frame(){
+        if(i>=points.length)
+            i=0;
+        circle.style.left=`${points[i].x-50}px`
+        circle.style.top=`${points[i].y-50}px`
         i++;
-        i%=points.length;
     }
-
 }
 
 function createPoints(arr)
