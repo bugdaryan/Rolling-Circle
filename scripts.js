@@ -1,39 +1,42 @@
-document.body.onload=function init(){
+document.body.onload=()=>{
+    // setting box-sizing to border-box, to include its border width to its size
     document.body.style="box-sizing:border-box;"
 
+    //creating big circle
     let bigCircle=document.createElement('div');
-    bigCircle.style=`
-    margin-left:150px;
-    margin-top:50px;
-    width: 500px;
-    height: 500px;
-    border-radius: 100%;
-    color: gray;
-    border:solid gray 16px;
-    box-sizing:inherit`;
-    document.body.appendChild(bigCircle);
 
-    let smallCircle=document.createElement('div');
-    smallCircle.id='smallCircle'
-    smallCircle.style=`
+    //setting style
+    bigCircle.style=`
+    margin-left:150px; /* adding space from left and top for small circle to roll */
+    margin-top:50px;
+    width: 500px;  /* setting width and height */
+    height: 500px;
+    border-radius: 100%;  /* setting border-radius to 100%, to make it circle */
+    border:solid black 16px;  /* setting type, color and width of border */
+    box-sizing:inherit`;  // setting box-sizing to inherit from body, again to include its border width to its size
+    document.body.appendChild(bigCircle);  //and appending to DOM tree
+
+    let smallCircle=document.createElement('div');  //now creating small circle
+    smallCircle.id='smallCircle'  //setting id, we will need to accses it later
+    smallCircle.style=` 
     width: 100px;
     height: 100px;
     border-radius: 100%;
-    color: yellow;
-    position:absolute;
-    top:0;
-    left:0;
-    z-index=1;
-    border:solid yellow 6px;
+    position:absolute; 
+    top:250;
+    left:600;
+    z-index=1; /* setting z-index to 1 because we want it to be on the big circle , not under, by default its 0,  */
+    border:solid blue 6px;
     box-sizing:inherit;`;
     document.body.appendChild(smallCircle);
 
-    let startButton=document.createElement('button');
-    startButton.type="button";
-    startButton.innerHTML="click me";
-    startButton.style=`
+    let startButton=document.createElement('button');  //creating start button
+    startButton.type="button";  //setting type
+    startButton.id="startButton" //setting id
+    startButton.innerHTML="START"; //inner text
+    startButton.style=` /* style is pretty much the same */
     font-size:30; 
-    background: red; 
+    background: green; 
     color:white; 
     border-radius:8px; 
     position:absolute;
@@ -41,15 +44,16 @@ document.body.onload=function init(){
     top:40px;
     box-sizing:inherit;
     outline:none;`;
-    startButton.addEventListener('click',onStartButtonClick);
-    document.body.appendChild(startButton);
+    startButton.addEventListener('click',onStartButtonClick); //adding onStartButtonClick listener on click event, 
+    document.body.appendChild(startButton); //appending to tree
 
-    let stopButton=document.createElement('button');
+    let stopButton=document.createElement('button'); //adding stop button, i was bored
     stopButton.type="button";
+    stopButton.id="stopButton"
     stopButton.innerHTML="STOP";
     stopButton.style=`
     font-size:30; 
-    background: red; 
+    background: gray; 
     color:white; 
     border-radius:8px; 
     position:absolute;
@@ -61,48 +65,62 @@ document.body.onload=function init(){
     document.body.appendChild(stopButton);
 }
 
-const points=new Array(200);
-let startButtonClicked=false;
-let intervalId;
+const points=new Array(200);  //this will be the points on our big circle, where will go our small circle
+points[0]=-1; //setting first element to -1, so that later we can check if its empty or not
+let startButtonClicked=false; // some flag to turn on and off when start button is pressed
+let intervalId;  // some interval id to clear and store interval in it
+let lastPositionIndex=0; // last index of small circle, when he was stopped
+let frameSpeed=10;  // and rolling speed, smaller is faster
 
+//function that will be called, when start button is clicked
 function onStartButtonClick(){
-    if(!startButtonClicked){
-        startButtonClicked=true;
-        startCircle();
+    if(!startButtonClicked){  //checking if it was clecked before
+        document.getElementById("startButton").style.background="gray" //setting background to gray
+        document.getElementById("stopButton").style.background="red"  //and red
+        startButtonClicked=true; //setting flag, so our function wont do the same thing in a row
+        startCircle();  // calling function to start rolling a circle
     }
 }
 
-function onStopButtonClick(){
-    startButtonClicked=false;
-    clearInterval(intervalId);
+//this function is called, when stop button is clicked
+function onStopButtonClick(){  
+    startButtonClicked=false; //resetting our flag
+    document.getElementById("startButton").style.background="green"
+    document.getElementById("stopButton").style.background="gray"
+    clearInterval(intervalId); //and clearing interval, so that our circle stops rolling 
 }
 
+//this function is called when circle is about to roll
 function startCircle(){
+    if(points[0]===-1) //if first element is -1, it means points is empty, otherwise we already have poits we need
+        createPoints(points); // getting points
+    const circle=document.getElementById('smallCircle'); // getting small circle
+    let i=lastPositionIndex; // in case if we already started and stopped circle, we simply take the last index, and continue from it 
+    intervalId=setInterval(frame,frameSpeed); //setting interval, and storing in intervalId, so that later we can clear it
     
-    createPoints(points);
-    const circle=document.getElementById('smallCircle');
-    let i=0;
-    intervalId=setInterval(frame,5);
+    //this function will be rolling circle
     function frame(){
-        if(i>=points.length)
+        if(i>=points.length) //checking if i is grather or equal to our points length
             i=0;
-        circle.style.left=`${points[i].x-50}px`
+        circle.style.left=`${points[i].x-50}px` //changing circles left and top positions
         circle.style.top=`${points[i].y-50}px`
-        i++;
+        i++; 
+        lastPositionIndex=i; //saving last index, in case of we stop at any moment
     }
 }
 
-function createPoints(arr)
+//this function will create points on our big circle
+function createPoints(arr) 
 {
-    const radius =250;
-    const x0=150;
-    const y0=50;
-    let coef=1;
+    const radius =250; //our big circle is 500x500, so its radius is 250, (i know i know, hard coding, bad practice)
+    const x0=150; // now we had a margin from left on 150px
+    const y0=50; // and from top on 50px, we have to add them above
+    let coef=1; // setting some coeficent, so that we can compute radians
     for(let i=0;i<arr.length;i++){
-        let angle = coef*Math.PI*2;
-        let x = x0+radius+Math.cos(angle)*radius;
-        let y = y0+radius+Math.sin(angle)*radius;
-        arr[i]={x:x,y:y};
-        coef-=1/arr.length;
+        let radian = coef*Math.PI*2; // getting our radian
+        let x = x0+radius+Math.cos(radian)*radius; // now adding x0 and radius to cos(radian)* radius, will give us some x on our big circle
+        let y = y0+radius+Math.sin(radian)*radius; // same here
+        arr[i]={x:x,y:y}; // now putting them in array
+        coef-=1/arr.length; // and subtracting from coef 1/arr.length (our loop will do arr.length times, so arr.length*1/arr.lenght=1, and coef at the end will be 0, means we will be there, where we started)
     }
 }
