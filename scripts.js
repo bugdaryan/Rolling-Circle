@@ -47,7 +47,7 @@ document.body.onload=()=>{
     startButton.addEventListener('click',onStartButtonClick); //adding onStartButtonClick listener on click event, 
     document.body.appendChild(startButton); //appending to tree
 
-    let stopButton=document.createElement('button'); //adding stop button, i was bored
+    let stopButton=document.createElement('button'); //adding stop button (i was bored)
     stopButton.type="button";
     stopButton.id="stopButton"
     stopButton.innerHTML="STOP";
@@ -66,7 +66,7 @@ document.body.onload=()=>{
 }
 
 const points=new Array(200);  //this will be the points on our big circle, where will go our small circle
-points[0]=-1; //setting first element to -1, so that later we can check if its empty or not
+points[0]=-1; //setting first element to -1, so that later we can check if its empty or not (first element of points cant be -1 in any case, because elements of points will be objects not numbers)
 let startButtonClicked=false; // some flag to turn on and off when start button is pressed
 let intervalId;  // some interval id to clear and store interval in it
 let lastPositionIndex=0; // last index of small circle, when he was stopped
