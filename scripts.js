@@ -3,7 +3,7 @@ document.body.onload=()=>{
     document.body.style="box-sizing:border-box;"
 
     //creating big circle
-    let bigCircle=document.createElement('div');
+    const bigCircle=document.createElement('div');
 
     //setting style
     bigCircle.style=`
@@ -16,7 +16,7 @@ document.body.onload=()=>{
     box-sizing:inherit`;  // setting box-sizing to inherit from body, again to include its border width to its size
     document.body.appendChild(bigCircle);  //and appending to DOM tree
 
-    let smallCircle=document.createElement('div');  //now creating small circle
+    const smallCircle=document.createElement('div');  //now creating small circle
     smallCircle.id='smallCircle'  //setting id, we will need to accses it later
     smallCircle.style=` 
     width: 100px;
@@ -30,7 +30,7 @@ document.body.onload=()=>{
     box-sizing:inherit;`;
     document.body.appendChild(smallCircle);
 
-    let startButton=document.createElement('button');  //creating start button
+    const startButton=document.createElement('button');  //creating start button
     startButton.type="button";  //setting type
     startButton.id="startButton" //setting id
     startButton.innerHTML="START"; //inner text
@@ -47,7 +47,7 @@ document.body.onload=()=>{
     startButton.addEventListener('click',onStartButtonClick); //adding onStartButtonClick listener on click event, 
     document.body.appendChild(startButton); //appending to tree
 
-    let stopButton=document.createElement('button'); //adding stop button (i was bored)
+    const stopButton=document.createElement('button'); //adding stop button (i was bored)
     stopButton.type="button";
     stopButton.id="stopButton"
     stopButton.innerHTML="STOP";
@@ -70,7 +70,7 @@ points[0]=-1; //setting first element to -1, so that later we can check if its e
 let startButtonClicked=false; // some flag to turn on and off when start button is pressed
 let intervalId;  // some interval id to clear and store interval in it
 let lastPositionIndex=0; // last index of small circle, when he was stopped
-let frameSpeed=10;  // and rolling speed, smaller is faster
+const frameSpeed=10;  // and rolling speed, smaller is faster
 
 //function that will be called, when start button is clicked
 function onStartButtonClick(){
@@ -117,9 +117,9 @@ function createPoints(arr)
     const y0=50; // and from top on 50px, we have to add them above
     let coef=1; // setting some coeficent, so that we can compute radians
     for(let i=0;i<arr.length;i++){
-        let radian = coef*Math.PI*2; // getting our radian
-        let x = x0+radius+Math.cos(radian)*radius; // now adding x0 and radius to cos(radian)* radius, will give us some x on our big circle
-        let y = y0+radius+Math.sin(radian)*radius; // same here
+        const radian = coef*Math.PI*2; // getting our radian
+        const x = x0+radius+Math.cos(radian)*radius; // now adding x0 and radius to cos(radian)* radius, will give us some x on our big circle
+        const y = y0+radius+Math.sin(radian)*radius; // same here
         arr[i]={x:x,y:y}; // now putting them in array
         coef-=1/arr.length; // and subtracting from coef 1/arr.length (our loop will do arr.length times, so arr.length*1/arr.lenght=1, and coef at the end will be 0, means we will be there, where we started)
     }
